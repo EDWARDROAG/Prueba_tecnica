@@ -1,0 +1,664 @@
+/*
+  LANDING ELEVATE — CSS (Parte 1)
+  Criterio de entrevista:
+  - Custom properties (:root): un valor, muchos usos. Cambiar el teal una vez.
+  - Grid: planos con filas y columnas (hero, curso, beneficios).
+  - Flexbox: un eje (formulario en columna, teléfono, botón, footer).
+  - Position absolute: decoración (fondo, overlay, círculos), NO el layout de contenido.
+  - Breakpoints: 960px (tablet) y 640px (móvil).
+*/
+
+/* ============================================================
+   1. CUSTOM PROPERTIES (variables CSS)
+   Se definen en :root = el documento entero las hereda.
+   Se usan con var(--nombre). Si no existieran, repetiría #6ebdbf
+   en botón, badge, outline, acentos… y un cambio rompería consistencia.
+   ============================================================ */
+:root {
+  --color-teal: #6ebdbf;           /* color de marca Elevate */
+  --color-teal-dark: #5aa9ab;      /* hover / títulos que piden más contraste */
+  --color-teal-light: #e8f6f6;     /* fondos suaves (lista, éxito) */
+  --color-text: #333333;
+  --color-text-muted: #666666;
+  --color-white: #ffffff;
+  --color-footer: #4a4a4a;
+  --color-border: #d9d9d9;
+  --color-error: #c0392b;
+  --font-main: "Montserrat", system-ui, sans-serif;
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 28px;
+  --radius-pill: 999px;            /* inputs del form: extremos redondos */
+  --shadow-form: 0 18px 45px rgba(0, 0, 0, 0.18);
+  /* min(1140px, 100% - 2rem): nunca más de 1140px; en pantallas chicas deja 1rem por lado */
+  --container: min(1140px, calc(100% - 2rem));
+}
+
+/* ============================================================
+   2. RESET MÍNIMO
+   box-sizing: border-box → padding y border entran en el width.
+   Evita que un input al 100% + padding se desborde.
+   ============================================================ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* El ancla #contact-form hace scroll suave (enlace “Empezar mi formación”). */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0; /* quita el margen default del navegador */
+  font-family: var(--font-main);
+  color: var(--color-text);
+  background: var(--color-white);
+  line-height: 1.5;
+}
+
+/* display:block quita el hueco bajo las imágenes (inline las trata como texto).
+   max-width:100% + height:auto = responsive sin deformar. */
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Centra el contenido y aplica el ancho token. margin-inline = izquierda y derecha. */
+.container {
+  width: var(--container);
+  margin-inline: auto;
+}
+
+/* ============================================================
+   3. BOTONES — FLEXBOX
+   inline-flex: el botón solo mide su contenido, no ocupa 100% (salvo --block).
+   align + justify center: el texto queda centrado en los dos ejes.
+   min-height 48px: tamaño táctil recomendado (accesibilidad móvil).
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0.75rem 1.75rem;
+  border: 0;
+  border-radius: 14px;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.btn--primary {
+  background: var(--color-teal);
+  color: var(--color-white);
+}
+
+/* :focus-visible = teclado (Tab), no el clic. Mejor que outline en todos los focus. */
+.btn--primary:hover,
+.btn--primary:focus-visible {
+  background: var(--color-teal-dark);
+}
+
+.btn--block {
+  width: 100%;
+  margin-top: 0.35rem;
+  min-height: 50px;
+  letter-spacing: 0.06em;
+}
+
+/* ============================================================
+   4. HERO
+   position:relative → las capas absolute se anclan a ESTA caja.
+   overflow:hidden recorta el círculo teal que se sale.
+   ============================================================ */
+.hero {
+  position: relative;
+  min-height: 720px;
+  overflow: hidden;
+  color: var(--color-white);
+}
+
+/* inset:0 = top/right/bottom/left 0 → cubre todo el hero.
+   cover: la foto llena el área recortando si hace falta. */
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  background: url("../assets/img/hero-banner.png") center / cover no-repeat;
+}
+
+/* Gradiente de izquierda (más oscuro, el texto) a derecha (más claro, el form).
+   Sin esto el H1 blanco no se leería sobre la foto. */
+.hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.35) 45%,
+    rgba(0, 0, 0, 0.15) 100%
+  );
+}
+
+/* Círculo decorativo. pointer-events:none → no tapa clics del formulario. */
+.hero__swoosh {
+  position: absolute;
+  right: -8%;
+  top: 50%;
+  width: min(55vw, 620px);
+  height: min(55vw, 620px);
+  border: 28px solid var(--color-teal);
+  border-radius: 50%;
+  transform: translateY(-50%);
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+/* z-index:1 pone copy+form ENCIMA de fondo/overlay/swoosh. */
+.hero__inner {
+  position: relative;
+  z-index: 1;
+  padding: 2rem 0 3rem;
+}
+
+.hero__brand {
+  margin-bottom: 2.5rem;
+}
+
+/* clamp(mín, preferido, máx): el logo crece con el viewport, con piso y techo. */
+.hero__logo {
+  width: clamp(140px, 18vw, 190px);
+}
+
+/*
+  GRID DEL HERO — decisión de entrevista
+  Grid controla filas y columnas a la vez. Aquí: 2 columnas de peso distinto.
+  1.05fr | 0.95fr = el copy un poco más ancho que el form.
+  gap con clamp: el hueco crece en pantallas grandes.
+  align-items:center: las dos regiones se centran en vertical.
+  NO es Flex: no es una tira, es un plano de dos regiones.
+*/
+.hero__grid {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: center;
+}
+
+/* max-width:16ch fuerza saltos de línea del H1 (como en diseño, no una sola raya). */
+.hero__copy h1 {
+  margin: 0 0 1.25rem;
+  font-size: clamp(1.75rem, 3.2vw, 2.65rem);
+  font-weight: 700;
+  line-height: 1.15;
+  max-width: 16ch;
+}
+
+.hero__badge {
+  margin: 0 0 1.15rem;
+  line-height: 1.75;
+}
+
+/*
+  box-decoration-break: clone = el fondo y el padding se clonan en CADA línea.
+  Sin esto, el teal sería un bloque único y no la “L” del diseño.
+*/
+.hero__badge span {
+  padding: 0.18em 0.5em;
+  background: var(--color-teal);
+  color: var(--color-text);
+  font-size: 0.95rem;
+  font-weight: 600;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.hero__cert {
+  margin: 1.35rem 0 0.45rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.hero__question {
+  margin: 0 0 0.7rem;
+  font-size: clamp(1.35rem, 2.5vw, 1.8rem);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.hero__sub {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 400;
+  opacity: 0.95;
+}
+
+/* El label existe para accesibilidad, pero el diseño lo oculta (el texto va en el placeholder). */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ============================================================
+   5. FORMULARIO
+   Flex en COLUMNA: 6 píldoras + botón. No Grid: no hay regiones de 2 ejes.
+   justify-self:end = en su celda Grid del hero, el form se pega a la derecha.
+   ============================================================ */
+.hero__form-wrap {
+  justify-self: end;
+  width: min(100%, 400px);
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 2rem 1.6rem 1.6rem;
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(12px);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-form);
+  color: var(--color-text);
+}
+
+.contact-form__title {
+  margin: 0;
+  color: var(--color-teal);
+  font-size: 1.45rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.contact-form__subtitle {
+  margin: -0.35rem 0 0.35rem;
+  color: var(--color-text);
+  font-size: 0.88rem;
+  text-align: center;
+}
+
+.form-field {
+  position: relative;
+}
+
+/* Píldora: radius 999px. Placeholder = el “label” visual del diseño. */
+.form-field input,
+.form-field select {
+  width: 100%;
+  min-height: 46px;
+  padding: 0.7rem 1.15rem;
+  border: 1px solid #e4e4e4;
+  border-radius: var(--radius-pill);
+  background: var(--color-white);
+  font: inherit;
+  font-size: 0.88rem;
+  color: var(--color-text);
+}
+
+.form-field input::placeholder {
+  color: #9a9a9a;
+}
+
+.form-field select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 2.4rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23888' d='M1 1.5 L6 6.5 L11 1.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1.15rem center;
+  cursor: pointer;
+}
+
+/* required + value="" = :invalid → el placeholder se ve gris, como en el diseño. */
+.form-field select:invalid {
+  color: #9a9a9a;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+  outline: 2px solid var(--color-teal);
+  outline-offset: 1px;
+  border-color: var(--color-teal);
+}
+
+.form-field input.invalid,
+.form-field select.invalid {
+  border-color: var(--color-error);
+}
+
+/*
+  TELÉFONO — FLEXBOX (una píldora)
+  Prefijo (bandera +57 ▼) no crece; el input sí (flex: 1).
+*/
+.phone-input {
+  display: flex;
+  align-items: center;
+  min-height: 46px;
+  padding-left: 1rem;
+  border: 1px solid #e4e4e4;
+  border-radius: var(--radius-pill);
+  background: var(--color-white);
+}
+
+.phone-input:focus-within {
+  outline: 2px solid var(--color-teal);
+  outline-offset: 1px;
+  border-color: var(--color-teal);
+}
+
+.phone-input:has(input.invalid) {
+  border-color: var(--color-error);
+}
+
+.phone-input__prefix {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding-right: 0.45rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+.phone-input__chevron {
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid #888;
+}
+
+.phone-input input {
+  border: 0;
+  border-radius: 0;
+  flex: 1;
+  min-height: 44px;
+  padding: 0.7rem 1.15rem 0.7rem 0.25rem;
+  background: transparent;
+}
+
+.phone-input input:focus {
+  outline: 0;
+}
+
+/* :empty oculta el span cuando no hay error → el gap del form se mantiene parejo. */
+.form-error:empty {
+  display: none;
+}
+
+.form-error {
+  display: block;
+  margin: 0.25rem 0 0 1rem;
+  font-size: 0.75rem;
+  color: var(--color-error);
+}
+
+.form-success {
+  margin: 0.25rem 0 0;
+  padding: 0.75rem;
+  background: var(--color-teal-light);
+  border-radius: var(--radius-sm);
+  color: var(--color-teal-dark);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* ============================================================
+   6. POR QUÉ ESTE CURSO — GRID (texto | foto)
+   Misma idea que el hero: dos regiones, no una barra.
+   ============================================================ */
+.why-course {
+  padding: 4.5rem 0;
+  background: var(--color-white);
+}
+
+.why-course__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+}
+
+.why-course__content h2 {
+  margin: 0 0 1rem;
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+/* 52ch ≈ 52 caracteres: líneas cortas, más fáciles de leer. */
+.why-course__content p {
+  margin: 0 0 1.25rem;
+  color: var(--color-text-muted);
+  max-width: 52ch;
+}
+
+.why-course__list {
+  margin: 0 0 1.75rem;
+  padding: 1.25rem 1.25rem 1.25rem 2.5rem;
+  background: var(--color-teal-light);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+}
+
+/* li + li = “un li que sigue a otro li”: espacio entre ítems, no encima del primero. */
+.why-course__list li + li {
+  margin-top: 0.45rem;
+}
+
+.why-course__visual {
+  position: relative; /* ancla el círculo teal .why-course__accent */
+  margin: 0;
+  justify-self: center;
+}
+
+/* aspect-ratio:1 = siempre cuadrado → el border-radius 50% es un círculo real. */
+.why-course__circle {
+  width: min(100%, 420px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+.why-course__circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* recorta sin aplastar */
+}
+
+.why-course__accent {
+  position: absolute;
+  left: -8%;
+  bottom: 8%;
+  width: 120px;
+  height: 120px;
+  border: 18px solid var(--color-teal);
+  border-radius: 50%;
+  opacity: 0.9;
+}
+
+/* ============================================================
+   7. BENEFICIOS — GRID de catálogo
+   repeat(4, 1fr): 4 columnas iguales. En 960px → 2; en 640px → 1.
+   Flex + wrap dejaría la última fila desigual. Grid mantiene celdas parejas.
+   ============================================================ */
+.benefits {
+  padding: 3.5rem 0 4.5rem;
+  background: #fafafa;
+}
+
+.benefits h2 {
+  margin: 0 0 2rem;
+  text-align: center;
+  color: var(--color-teal-dark);
+  font-size: clamp(1.4rem, 2.2vw, 1.85rem);
+  font-weight: 700;
+}
+
+.benefits__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+
+.benefit-card {
+  padding: 1.5rem 1.25rem;
+  background: var(--color-white);
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  text-align: center;
+}
+
+.benefit-card__icon {
+  margin: 0 auto 1rem;
+}
+
+.benefit-card h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.benefit-card p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+
+/* ============================================================
+   8. FOOTER — FLEXBOX
+   Es una tira, no un plano. space-between: logo izquierda, redes derecha.
+   flex-wrap: si no caben, bajan de línea en vez de aplastarse.
+   ============================================================ */
+.site-footer {
+  background: var(--color-footer);
+  color: var(--color-white);
+  padding: 2rem 0 1.25rem;
+}
+
+.site-footer__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.site-footer__logo {
+  width: clamp(150px, 20vw, 210px);
+}
+
+.site-footer__social {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.site-footer__social a {
+  display: inline-flex;
+  transition: opacity 0.2s ease;
+}
+
+.site-footer__social a:hover,
+.site-footer__social a:focus-visible {
+  opacity: 0.8;
+}
+
+.site-footer__divider {
+  width: var(--container);
+  height: 1px;
+  margin: 1.5rem auto 1rem;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.site-footer__copy {
+  margin: 0;
+  text-align: center;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* ============================================================
+   9. RESPONSIVE
+   Mobile-last (partimos de desktop y compactamos).
+   Pregunta típica: “¿por qué 960 y 640?”
+   960: 2 columnas del hero/curso ya no caben cómodas.
+   640: beneficios a 1 columna; footer se apila.
+   ============================================================ */
+@media (max-width: 960px) {
+  /* Una sola columna: copy arriba, form/foto abajo. Una línea, sin pelear flex-direction. */
+  .hero__grid,
+  .why-course__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero__form-wrap {
+    justify-self: stretch;
+    width: 100%;
+  }
+
+  .hero__copy h1 {
+    max-width: none;
+  }
+
+  .hero__swoosh {
+    right: -25%;
+    opacity: 0.45;
+  }
+
+  .benefits__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .hero {
+    min-height: auto; /* en móvil no forzamos 720px: el form alarga la sección */
+  }
+
+  .hero__inner {
+    padding: 1.25rem 0 2rem;
+  }
+
+  .benefits__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .site-footer__top {
+    flex-direction: column; /* el eje principal pasa a vertical */
+    align-items: flex-start;
+  }
+
+  .why-course__accent {
+    width: 80px;
+    height: 80px;
+    border-width: 12px;
+  }
+}
