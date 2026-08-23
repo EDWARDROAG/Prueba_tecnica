@@ -451,9 +451,19 @@ a {
 
 /* 52ch ≈ 52 caracteres: líneas cortas, más fáciles de leer. */
 .why-course__content p {
-  margin: 0 0 1.25rem;
+  margin: 0 0 0.9rem;
   color: var(--color-text-muted);
   max-width: 52ch;
+  line-height: 1.55;
+}
+
+.why-course__content p:last-of-type {
+  margin-bottom: 1.25rem;
+}
+
+.why-course__content strong {
+  font-weight: 700;
+  color: var(--color-text);
 }
 
 .why-course__list {
