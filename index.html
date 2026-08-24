@@ -1,105 +1,41 @@
-<!--
-  LANDING ELEVATE — Parte 1 (maquetación)
-  Qué defender en entrevista:
-  - HTML semántico: cada etiqueta dice QUÉ es el bloque, no solo cómo se ve.
-  - Un <div> es una caja sin significado. Aquí se usa solo cuando no hay etiqueta mejor.
-  - Accesibilidad: landmarks (main, footer), label asociados, aria-labelledby.
-  - SEO: Google entiende mejor secciones, titular único (h1) y description.
--->
 <!DOCTYPE html>
-<!-- html5. lang="es" ayuda a lectores de pantalla y a Google (idioma de la página). -->
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <!--
-    viewport: sin esto el móvil “simula” escritorio y el responsive no se ve.
-    width=device-width = ancho real del aparato.
-    initial-scale=1.0 = zoom inicial 100%.
-  -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- description: resumen para SEO / preview en buscadores. -->
   <meta name="description" content="Dermocosmética aplicada en medicina estética — Elevate BodyBrite Academy">
   <title>Elevate | Dermocosmética aplicada en medicina estética</title>
-  <!-- preconnect: empieza la conexión a Google Fonts antes de pedir el CSS (rendimiento). -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <!--
-    <main> = contenido principal de la página.
-    NO incluye footer. Un lector de pantalla puede saltar aquí.
-    Si me preguntan “¿por qué no un div?”: porque main es un landmark semántico.
-  -->
   <main>
-    <!--
-      SECCIÓN 1 — HERO
-      <section> = bloque temático con título propio.
-      aria-labelledby="hero-title" une esta section con el h1 (accesibilidad).
-    -->
     <section class="hero" aria-labelledby="hero-title">
-      <!--
-        Estas 3 capas son DECORACIÓN, no contenido.
-        Por eso son <div> (no hay etiqueta semántica para “fondo”).
-        role="presentation" / aria-hidden: el lector de pantalla las ignora.
-      -->
       <div class="hero__bg" role="presentation"></div>
       <div class="hero__overlay" role="presentation"></div>
-      <div class="hero__swoosh" aria-hidden="true"></div>
 
-      <!-- container: limita el ancho y centra. Clase de layout, no semántica. -->
       <div class="hero__inner container">
-        <!--
-          <header> = cabecera de ESTA section (logo).
-          No es el header de todo el sitio; es el encabezado del hero.
-        -->
         <header class="hero__brand">
-          <!-- alt="Elevate": si la imagen no carga, se lee la marca. width/height evitan salto de layout. -->
           <img src="assets/img/logo-elevate.svg" alt="Elevate" class="hero__logo" width="180" height="31">
         </header>
 
-        <!--
-          hero__grid (CSS Grid): dos REGIONES — copy | formulario.
-          Aquí sí va <div>: el grid es solo estructura visual, no un concepto HTML.
-        -->
         <div class="hero__grid">
           <div class="hero__copy">
-            <!-- Un solo h1 por página: el tema principal. id lo usa aria-labelledby. -->
             <h1 id="hero-title">Dermocosmética aplicada en medicina estética</h1>
-            <!--
-              Badge tipo “marcador”: el teal sigue CADA línea (forma en L).
-              inline-block haría un solo rectángulo. <br> fija el corte del diseño.
-            -->
             <p class="hero__badge"><span>Abierto a perfiles del área estética,<br>bienestar y salud.</span></p>
-            <!--
-              Jerarquía del diseño: etiqueta chica → pregunta grande → apoyo.
-              La pregunta NO es un h1 (el h1 ya es el nombre del curso).
-            -->
             <p class="hero__cert">Certificado</p>
             <p class="hero__question">¿Quieres empezar o fortalecer<br>tu camino en estética?</p>
             <p class="hero__sub">Puedes iniciar tu formación con o sin experiencia.</p>
           </div>
 
-          <!--
-            <aside> = contenido de APOYO al mensaje (captar el lead), no el titular.
-            Si me preguntan “¿por qué no section?”: section sería otro tema; aside es complementario.
-          -->
           <aside class="hero__form-wrap">
-            <!--
-              novalidate: desactiva el globo nativo del navegador.
-              Así controlamos los errores con JS (mismo diseño en todos los browsers).
-              La validación HTML (required, type, pattern) sigue existiendo como respaldo.
-            -->
+            <!-- novalidate: mensajes de error propios (JS), no los del navegador -->
             <form class="contact-form" id="contact-form" novalidate>
               <h2 class="contact-form__title">¡Déjanos tus datos!</h2>
               <p class="contact-form__subtitle">Te orientamos en el proceso.</p>
 
-              <!--
-                Diseño: 6 campos en UNA columna, píldora, texto DENTRO (placeholder).
-                label.visually-hidden: el lector de pantalla sigue teniendo nombre del campo.
-                data-error-for: el JS pinta el error en este span.
-              -->
               <div class="form-field">
                 <label class="visually-hidden" for="nombre">Nombre</label>
                 <input type="text" id="nombre" name="nombre" autocomplete="given-name" placeholder="Nombre" required>
@@ -117,7 +53,6 @@
               </div>
               <div class="form-field">
                 <label class="visually-hidden" for="telefono">Número de contacto</label>
-                <!-- Flexbox: bandera +57 + chevron | input. Una sola píldora, no dos cajas. -->
                 <div class="phone-input">
                   <span class="phone-input__prefix" aria-hidden="true">
                     <span class="phone-input__flag">🇨🇴</span>
@@ -150,9 +85,7 @@
                 <span class="form-error" data-error-for="sede"></span>
               </div>
 
-              <!-- type="submit" dispara el evento submit. JS lo intercepta con preventDefault. -->
               <button type="submit" class="btn btn--primary btn--block">Recibir asesoría</button>
-              <!-- hidden: oculto hasta que JS lo muestre. id lo busca main.js. -->
               <p class="form-success" id="form-success" hidden>¡Gracias! Recibimos tus datos. Te contactaremos pronto.</p>
             </form>
           </aside>
@@ -160,66 +93,57 @@
       </div>
     </section>
 
-    <!--
-      SECCIÓN 2 — POR QUÉ ESTE CURSO
-      Otra section: otro tema, otro h2.
-      Grid 2 columnas: texto | imagen.
-    -->
     <section class="why-course" aria-labelledby="why-course-title">
-      <div class="container why-course__grid">
-        <div class="why-course__content">
-          <h2 id="why-course-title">¿Por qué este<br>curso es para ti?</h2>
-          <p>Porque aprender estética no es solo estudiar: es practicar en entornos reales.</p>
-          <p>
-            En este <strong>entrenamiento intensivo</strong> entrenarás con las mismas tecnologías,
-            desarrollando habilidades técnicas, criterio profesional y mayor seguridad para ejercer.
-          </p>
-          <ul class="why-course__list">
-            <li>Grupos reducidos</li>
-            <li>Guía por profesionales</li>
-            <li>Facilidades de pago</li>
-            <li>Acceso prioritario a vacantes en sedes BodyBrite</li>
-          </ul>
-          <!-- href="#contact-form": ancla al id del form. scroll-behavior: smooth en CSS. -->
-          <a href="#contact-form" class="btn btn--primary">Empezar mi formación</a>
+      <div class="container">
+        <div class="why-course__grid">
+          <div class="why-course__content">
+            <h2 id="why-course-title">¿Por qué este<br>curso es para ti?</h2>
+            <p>Porque aprender estética no es solo estudiar: es practicar en entornos reales.</p>
+            <p>
+              En este <strong>entrenamiento intensivo</strong> entrenarás con las mismas tecnologías,
+              desarrollando habilidades técnicas, criterio profesional y mayor seguridad para ejercer.
+            </p>
+            <div class="why-course__callout">
+              <p class="why-course__callout-title">Todo con:</p>
+              <ul class="why-course__list">
+                <li>Grupos reducidos</li>
+                <li>Guía por profesionales</li>
+                <li>Facilidades de pago</li>
+                <li>Acceso prioritario a vacantes en sedes BodyBrite</li>
+              </ul>
+            </div>
+          </div>
+
+          <figure class="why-course__visual">
+            <div class="why-course__circle">
+              <img src="assets/img/curso-circular.png" alt="Profesional aplicando tratamiento facial" width="420" height="420">
+            </div>
+          </figure>
         </div>
 
-        <!--
-          <figure> = imagen con función de contenido (foto del curso), no icono decorativo.
-          El círculo teal extra es decoración → span + aria-hidden.
-        -->
-        <figure class="why-course__visual">
-          <div class="why-course__circle">
-            <img src="assets/img/curso-circular.png" alt="Profesional aplicando tratamiento facial" width="420" height="420">
-          </div>
-          <span class="why-course__accent" aria-hidden="true"></span>
-        </figure>
+        <div class="why-course__cta-row">
+          <a href="#contact-form" class="btn btn--primary why-course__cta">Empezar mi formación</a>
+        </div>
       </div>
     </section>
 
-    <!--
-      SECCIÓN 3 — BENEFICIOS
-      Catálogo de 4 piezas. Grid repeat(4, 1fr).
-      Cada pieza es <article>: tiene sentido sola (icono + título + texto).
-    -->
     <section class="benefits" aria-labelledby="benefits-title">
       <div class="container">
-        <h2 id="benefits-title">¿Por qué formarte con nosotros?</h2>
+        <h2 id="benefits-title">¿Por qué formarte<br>con nosotros?</h2>
         <div class="benefits__grid">
           <article class="benefit-card">
-            <!-- alt="" en iconos: el h3 ya dice el significado. Evita “icono entorno” duplicado. -->
             <img src="assets/icons/icono-entorno.svg" alt="" width="48" height="48" class="benefit-card__icon">
-            <h3>Entorno profesional</h3>
+            <h3>Entorno<br>profesional</h3>
             <p>Fórmate en centros BodyBrite.</p>
           </article>
           <article class="benefit-card">
             <img src="assets/icons/icono-practica.svg" alt="" width="48" height="48" class="benefit-card__icon">
-            <h3>Práctica supervisada</h3>
+            <h3>Práctica<br>supervisada</h3>
             <p>Aprende con la guía de nuestros expertos.</p>
           </article>
           <article class="benefit-card">
             <img src="assets/icons/icono-experiencia.svg" alt="" width="48" height="48" class="benefit-card__icon">
-            <h3>Experiencia aplicada</h3>
+            <h3>Experiencia<br>aplicada</h3>
             <p>Metodología enfocada al desarrollo práctico.</p>
           </article>
           <article class="benefit-card">
@@ -232,20 +156,11 @@
     </section>
   </main>
 
-  <!--
-    <footer> FUERA de <main>: es el cierre del sitio, no el contenido de la landing.
-    Landmark propio: el lector puede ir al pie sin recorrer todo.
-    Layout: Flexbox (tira: logo | redes), no Grid.
-  -->
   <footer class="site-footer">
     <div class="container site-footer__top">
       <img src="assets/img/logo-elevate.svg" alt="Elevate" class="site-footer__logo" width="200" height="34">
       <div class="site-footer__social">
         <span>Síguenos</span>
-        <!--
-          href="#" es placeholder. En producción iría la URL real.
-          aria-label en el <a>: el img tiene alt="" porque el enlace ya nombra la red.
-        -->
         <a href="#" aria-label="Facebook">
           <img src="assets/icons/icono-fb.svg" alt="" width="36" height="36">
         </a>
@@ -255,10 +170,9 @@
       </div>
     </div>
     <div class="site-footer__divider" role="presentation"></div>
-    <p class="site-footer__copy">© 2024 Elevate — Todos los derechos reservados</p>
+    <p class="site-footer__copy">© 2026 Elevate — Todos los derechos reservados</p>
   </footer>
 
-  <!-- Al final del body: el HTML ya existe cuando corre la validación. -->
   <script src="js/main.js"></script>
 </body>
 </html>
